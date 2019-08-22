@@ -79,12 +79,19 @@ class DuelBot:
     """
     Main DuelBot class
     """
-    def __init__(self, ability):
+    def __init__(self, name, ability):
+        super().__init__(ability)
+        self.name = name
+
+        # TODO make this a tuple.
+        self.ability = ability
+
         # Setup vars
         self.position = 0
         self.health = 100
         self.accuracy = 1
         self.energy = 100
+        
 
     def begin(self):
         """
