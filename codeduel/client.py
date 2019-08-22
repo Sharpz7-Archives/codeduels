@@ -19,7 +19,7 @@ class Duel:
 
         # If player2 is not set, make it the CPU
         if not self.p2:
-            self.p2 = dueler_cpu
+            self.p2 = CPU("CPU", attack)
 
         # Make the starting player random.
         self.order = r.sample([self.p1, self.p2], 2)
@@ -114,7 +114,7 @@ class CPU(DuelBot):
         self.name = name
         self.ability = ability
 
-    def strategy(self, duel):
+    def strategy(self, duel, opp):
         duel.attack(self.ability)
 
 
@@ -122,5 +122,3 @@ attack = Ability(
     name="Knife",
     damage=10,
 )
-
-dueler_cpu = CPU("CPU", attack)
