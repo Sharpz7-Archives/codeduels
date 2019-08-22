@@ -48,4 +48,5 @@ attack = Ability(
 )
 
 dueler = AdamsBot("James", attack)
+dueler.strategise()
 dueler.begin()
