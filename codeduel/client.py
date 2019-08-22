@@ -94,6 +94,17 @@ class DuelBot:
         """
         duel = Duel(self)
         duel.start()
+    
+    def strategise(self):
+        with open("strategy.py", "r") as sF:
+            strategyCode = sF.read()[31::]
+        
+        strategyCode = [i.lstrip() for i in strategyCode.split("\n")]
+        strategyCode = [i + "\n" for i in strategyCode]
+        strategyCode = "".join(strategyCode)
+        print(strategyCode)
+        #
+        eval(strategyCode)
 
     def __repr__(self):
         return (
