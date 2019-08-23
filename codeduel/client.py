@@ -80,7 +80,7 @@ class DuelBot:
     Main DuelBot class
     """
     def __init__(self, name, ability):
-        
+
         self.name = name
 
         # TODO make this a tuple.
@@ -90,7 +90,7 @@ class DuelBot:
         self.position = 0
         self.health = 100
         self.accuracy = 1
-        self.energy = 100        
+        self.energy = 100
 
     def begin(self):
         """
@@ -109,8 +109,7 @@ class DuelBot:
         strategyCode = [i + "\n" for i in strategyCode]
         strategyCode = "".join(strategyCode)
         print(strategyCode)
-        #
-        eval(strategyCode)
+        return strategyCode
 
     def __repr__(self):
         return (
