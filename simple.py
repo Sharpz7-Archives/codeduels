@@ -14,12 +14,9 @@ class AdamsBot(DuelBot):
     coders having to worry about it
     """
 
-    def __init__(self, name, ability):
-        super().__init__(ability)
+    def __init__(self, name):
+        super().__init__()
         self.name = name
-
-        # TODO make this a tuple.
-        self.ability = ability
 
     def strategy(self, duel, opp):
         """
@@ -27,7 +24,8 @@ class AdamsBot(DuelBot):
         This has a lot of potential, we will give a example
         below
         """
-        duel.attack(self.ability)
+
+        duel.attack(attack)
         # Here is a light example of whats possible
         # The combinations are virtually endless
         #
@@ -45,7 +43,10 @@ class AdamsBot(DuelBot):
 attack = Ability(
     name="Knife",
     damage=10,
+    health=5,
+    range=100,
+    accuracy=10,
 )
 
-dueler = AdamsBot("James", attack)
+dueler = AdamsBot("James")
 dueler.begin()

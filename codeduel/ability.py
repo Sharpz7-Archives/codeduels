@@ -17,24 +17,23 @@ class Ability:
 
         # General Args
         self.cooldown_length = 0
-        self.buff = False
 
         # Buff args
-        self.health = None
-        self.move = None
+        self._health = 0
+        self._move = 0
 
         # Debuff args
-        self.damage = None
-        self.accuracy = None
-        self.range = None
+        self._damage = 0
+        self._accuracy = 0
+        self._range = 0
 
         # Set the actual args
         for key, value in kwargs.items():
-            setattr(self, key, value)
+            setattr(self, f"_{key}", value)
 
         # Setup vars
-        self.cooldown = self.cooldown_length
-        self.energy = self.calc_energy()
+        self._cooldown = self.cooldown_length
+        self._energy = self.calc_energy()
 
     def do_ability(self, main, opp):
         """
@@ -44,14 +43,22 @@ class Ability:
         and takes away the energy.
         """
 
-        cooldown_ready = self.cooldown >= self.cooldown_length
+        cooldown_ready = self._cooldown >= self.cooldown_length
         if cooldown_ready:
             self.apply_ability(main, opp)
-            main.energy -= self.energy
+            main._energy -= self._energy
             self.cooldown = 0
             return True
 
-        self.cooldown += 1
+        self._cooldown += 1
+
+    def distance(self, main, opp):
+        """
+        Calculate the Distance between the two
+        players.
+        """
+
+        return abs(main._position - opp._position)
 
     def check_stats(self):
         """
@@ -72,16 +79,16 @@ class Ability:
         """
 
         # If the move hit...
-        if r.random() < main.accuracy:
-            if self.move:
-                self.dueler += self.move
+        if r.random() < main._accuracy/100:
+            if self._move:
+                main._position += self._move
 
-            if self.range:
-                # if opp in range
-                opp -= self.damage
+            if self._health:
+                main._health += self._health
 
-            if self.health:
-                main.health += self.health
+            if self._damage:
+                if self._range >= self.distance(main, opp):
+                    opp._health -= self._damage
 
-            if self.damage:
-                opp.health -= self.damage
+            if self._accuracy:
+                opp._accuracy -= self._accuracy

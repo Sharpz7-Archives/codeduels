@@ -1,7 +1,10 @@
-from .ability import Ability
-from .errors import NotEnoughEnergy
+import os
 import random as r
 import time
+
+from tabulate import tabulate
+
+from .ability import Ability
 
 
 class Duel:
@@ -13,16 +16,19 @@ class Duel:
     class.
     """
     def __init__(self, player1, player2=None):
+        # Setup Vars
+
+        self.headers = ["Name", "Health", "Energy", "Accuracy", "Position"]
         # Player args
         self.p1 = player1
         self.p2 = player2
 
         # If player2 is not set, make it the CPU
         if not self.p2:
-            self.p2 = CPU("CPU", attack)
+            self.p2 = CPU("CPU")
 
         # Make the starting player random.
-        self.order = r.sample([self.p1, self.p2], 2)
+        self._order = r.sample([self.p1, self.p2], 2)
 
     def start(self):
         """
@@ -30,29 +36,33 @@ class Duel:
         """
 
         # While both players are alive
-        while self.p1.health > 0 and self.p2.health > 0:
+        while self.p1._health > 0 and self.p2._health > 0:
 
             # Ensures both users have a move
             for x, y in [(0, 1), (1, 0)]:
                 time.sleep(1)
 
                 # Sets the player and opponent
-                self.main = self.order[x]
-                self.opp = self.order[y]
+                self.main = self._order[x]
+                self.opp = self._order[y]
 
                 # Runs the bots strategy
                 self.main.strategy(self, self.opp)
 
-                # Debugging
-                print(self.main, "\n")
+                # Display the game
+                self.display()
+                self.main._energy += 5
+
+                if self.main._health <= 0 or self.opp._health <= 0:
+                    break
 
         # If player 1 died, show player 2 won
-        if self.p1.health < 0:
+        if self.p1._health <= 0:
             print(f"{self.p2.name} has won!!!")
             exit()
 
         # If player 2 died, show player 1 won.
-        elif self.p2.health < 0:
+        elif self.p2._health <= 0:
             print(f"{self.p1.name} has won!!!")
             exit()
 
@@ -60,6 +70,10 @@ class Duel:
         else:
             print("You both died... lol get good")
             exit()
+
+    def display(self):
+        os.system("clear||cls")
+        print(tabulate([self.main, self.opp], headers=self.headers))
 
     def attack(self, ability):
         """
@@ -69,22 +83,34 @@ class Duel:
 
         This method is really not needed
         """
-        if ability.energy < self.main.energy:
+        if ability._energy <= self.main._energy:
             ability.do_ability(self.main, self.opp)
+
+        # If they have no energy, and are not the CPU
         elif not isinstance(self.main, CPU):
-            raise NotEnoughEnergy(f"{ability.name} took too much energy")
+            pass
 
 
 class DuelBot:
     """
     Main DuelBot class
     """
-    def __init__(self, ability):
+    def __init__(self):
         # Setup vars
-        self.position = 0
-        self.health = 100
-        self.accuracy = 1
-        self.energy = 100
+        self._position = 0
+        self._health = 100
+        self._accuracy = 100
+        self._energy = 100
+
+    def __iter__(self):
+        for stat in [
+            self.name,
+            self._health,
+            self._energy,
+            self._accuracy,
+            self._position
+        ]:
+            yield stat
 
     def begin(self):
         """
@@ -95,30 +121,33 @@ class DuelBot:
         duel = Duel(self)
         duel.start()
 
-    def __repr__(self):
-        return (
-            f"{self.name} Stats\n"
-            f"Health {self.health}\n"
-            f"Position {self.position}\n"
-            f"Accuracy {self.accuracy}\n"
-            f"Energy {self.energy}"
-        )
+    def position(self):
+        return self._position
+
+    def health(self):
+        return self._health
+
+    def accuracy(self):
+        return self._accuracy
+
+    def energy(self):
+        return self._energy
 
 
 class CPU(DuelBot):
     """
     CPU Bot for singleplayer
     """
-    def __init__(self, name, ability):
-        super().__init__(ability)
+    def __init__(self, name):
+        super().__init__()
         self.name = name
-        self.ability = ability
 
     def strategy(self, duel, opp):
-        duel.attack(self.ability)
+        duel.attack(attack)
 
 
 attack = Ability(
     name="Knife",
     damage=10,
+    move=1
 )
