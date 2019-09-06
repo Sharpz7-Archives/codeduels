@@ -67,7 +67,7 @@ class Duel:
 
     def display(self):
         os.system("clear||cls")
-        print(tabulate([self.main, self.opp], headers=self.headers))
+        print(tabulate([self.p1, self.p2], headers=self.headers))
 
     def ability(self, ability):
         """

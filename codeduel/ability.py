@@ -15,9 +15,6 @@ class Ability:
         # Name arg
         self.name = name
 
-        # General Args
-        self._cooldown_length = 0
-
         # Buff args
         self._health = 0
         self._move = 0
@@ -32,12 +29,10 @@ class Ability:
             setattr(self, f"_{key}", int(value))
 
         # Deal with Negatives
-        self._cooldown_length = abs(self._cooldown_length)
         self._range = abs(self._range)
         self._accuracy = abs(self._accuracy)
 
         # Setup vars
-        self._cooldown = self._cooldown_length
         self._energy = self.calc_energy()
 
     def do_ability(self, main, opp):
@@ -48,14 +43,9 @@ class Ability:
         and takes away the energy.
         """
 
-        cooldown_ready = self._cooldown >= self._cooldown_length
-        if cooldown_ready:
-            self.apply_ability(main, opp)
-            main._energy -= self._energy
-            self.cooldown = 0
-            return True
-
-        self._cooldown += 1
+        self.apply_ability(main, opp)
+        main._energy -= self._energy
+        return True
 
     def distance(self, main, opp):
         """
@@ -71,9 +61,6 @@ class Ability:
         """
 
         energy = 0
-
-        if self._cooldown_length:
-            energy -= self._cooldown_length * 2
 
         if self._health:
             energy += self._health * 3
