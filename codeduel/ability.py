@@ -79,7 +79,7 @@ class Ability:
             energy += self._health * 3
 
         if self._move:
-            energy += int(self._health * 1.5)
+            energy += int(self._move * 1.5)
 
         if self._damage:
             energy += self._damage * 2
