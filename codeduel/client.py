@@ -69,9 +69,9 @@ class Duel:
         os.system("clear||cls")
         print(tabulate([self.main, self.opp], headers=self.headers))
 
-    def attack(self, ability):
+    def ability(self, ability):
         """
-        Attack Method
+        Ability Method
 
         Errors if there is not enough energy
 
