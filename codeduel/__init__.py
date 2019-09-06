@@ -1,4 +1,4 @@
-from .client import DuelBot
+from .client import DuelBot, Duel
 from .ability import Ability
 
 __title__ = "codeduels"
@@ -8,4 +8,4 @@ __description__ = "Facebook Chat (Messenger) for Python"
 __author__ = "Adam McArthur"
 __email__ = "adam@mcaq.me"
 
-__all__ = ["DuelBot", "Ability"]
+__all__ = ["DuelBot", "Ability", "Duel"]

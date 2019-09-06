@@ -4,7 +4,8 @@ Rework how multiplayer will function.
 Rework how CPU will work.
 """
 
-from codeduel import Ability, DuelBot
+from codeduel import Ability, DuelBot, Duel
+from player2 import cpu
 
 
 class AdamsBot(DuelBot):
@@ -43,10 +44,8 @@ class AdamsBot(DuelBot):
 attack = Ability(
     name="Knife",
     damage=10,
-    health=5,
-    range=100,
-    accuracy=10,
 )
 
-dueler = AdamsBot("James")
-dueler.begin()
+dueler = AdamsBot("Adam")
+duel = Duel(dueler, cpu)
+duel.start()

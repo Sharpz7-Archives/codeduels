@@ -4,8 +4,6 @@ import time
 
 from tabulate import tabulate
 
-from .ability import Ability
-
 
 class Duel:
     """
@@ -15,17 +13,13 @@ class Duel:
     but this is written in the same way as the user
     class.
     """
-    def __init__(self, player1, player2=None):
+    def __init__(self, player1, player2):
         # Setup Vars
 
         self.headers = ["Name", "Health", "Energy", "Accuracy", "Position"]
         # Player args
         self.p1 = player1
         self.p2 = player2
-
-        # If player2 is not set, make it the CPU
-        if not self.p2:
-            self.p2 = CPU("CPU")
 
         # Make the starting player random.
         self._order = r.sample([self.p1, self.p2], 2)
@@ -86,10 +80,6 @@ class Duel:
         if ability._energy <= self.main._energy:
             ability.do_ability(self.main, self.opp)
 
-        # If they have no energy, and are not the CPU
-        elif not isinstance(self.main, CPU):
-            pass
-
 
 class DuelBot:
     """
@@ -112,15 +102,6 @@ class DuelBot:
         ]:
             yield stat
 
-    def begin(self):
-        """
-        Start a duel
-
-        Again, I feel this can be reworked.
-        """
-        duel = Duel(self)
-        duel.start()
-
     def position(self):
         return self._position
 
@@ -132,22 +113,3 @@ class DuelBot:
 
     def energy(self):
         return self._energy
-
-
-class CPU(DuelBot):
-    """
-    CPU Bot for singleplayer
-    """
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-
-    def strategy(self, duel, opp):
-        duel.attack(attack)
-
-
-attack = Ability(
-    name="Knife",
-    damage=10,
-    move=1
-)

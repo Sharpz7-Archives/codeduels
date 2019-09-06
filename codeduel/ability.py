@@ -16,7 +16,7 @@ class Ability:
         self.name = name
 
         # General Args
-        self.cooldown_length = 0
+        self._cooldown_length = 0
 
         # Buff args
         self._health = 0
@@ -29,10 +29,15 @@ class Ability:
 
         # Set the actual args
         for key, value in kwargs.items():
-            setattr(self, f"_{key}", value)
+            setattr(self, f"_{key}", int(value))
+
+        # Deal with Negatives
+        self._cooldown_length = abs(self._cooldown_length)
+        self._range = abs(self._range)
+        self._accuracy = abs(self._accuracy)
 
         # Setup vars
-        self._cooldown = self.cooldown_length
+        self._cooldown = self._cooldown_length
         self._energy = self.calc_energy()
 
     def do_ability(self, main, opp):
@@ -43,7 +48,7 @@ class Ability:
         and takes away the energy.
         """
 
-        cooldown_ready = self._cooldown >= self.cooldown_length
+        cooldown_ready = self._cooldown >= self._cooldown_length
         if cooldown_ready:
             self.apply_ability(main, opp)
             main._energy -= self._energy
@@ -60,18 +65,35 @@ class Ability:
 
         return abs(main._position - opp._position)
 
-    def check_stats(self):
-        """
-        Check if all stats make sense and match
-        """
-        pass
-
     def calc_energy(self):
         """
         Use a equation to calculate the energy of the ability
         """
-        # TODO write the equation
-        return 10
+
+        energy = 0
+
+        if self._cooldown_length:
+            energy -= self._cooldown_length * 2
+
+        if self._health:
+            energy += self._health * 3
+
+        if self._move:
+            energy += int(self._health * 1.5)
+
+        if self._damage:
+            energy += self._damage * 2
+
+        if self._accuracy:
+            energy += self._accuracy * 5
+
+        if self._range:
+            energy += int(self._range * 1.5)
+
+        if energy < 0:
+            energy = 0
+
+        return energy
 
     def apply_ability(self, main, opp):
         """
